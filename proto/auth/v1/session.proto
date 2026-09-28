@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package auth.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message Session {
+
+  string id = 1;
+
+  string user_id = 2;
+
+  google.protobuf.Timestamp created_at = 3;
+
+  google.protobuf.Timestamp last_used_at = 4;
+
+  google.protobuf.Timestamp expires_at = 5;
+
+  google.protobuf.Timestamp revoked_at = 6;
+
+  SessionStatus status = 7;
+}
+
+enum SessionStatus {
+
+  SESSION_STATUS_UNSPECIFIED = 0;
+
+  SESSION_STATUS_ACTIVE = 1;
+
+  SESSION_STATUS_EXPIRED = 2;
+
+  SESSION_STATUS_REVOKED = 3;
+}
+
+message GetSessionRequest {
+
+  string session_id = 1;
+}
+
+message GetSessionResponse {
+
+  Session session = 1;
+}
+
+message RevokeSessionRequest {
+
+  string session_id = 1;
+}
+
+message RevokeSessionResponse {
+}
+
+message RevokeAllUserSessionsRequest {
+
+  string user_id = 1;
+}
+
+message RevokeAllUserSessionsResponse {
+
+  uint32 revoked_count = 1;
+}
+
+message ListUserSessionsRequest {
+
+  string user_id = 1;
+}
+
+message ListUserSessionsResponse {
+
+  repeated Session sessions = 1;
+}
+
+service SessionService {
+
+  rpc GetSession(GetSessionRequest)
+  returns (GetSessionResponse);
+
+  rpc RevokeSession(RevokeSessionRequest)
+  returns (RevokeSessionResponse);
+
+  rpc RevokeAllUserSessions(RevokeAllUserSessionsRequest)
+  returns (RevokeAllUserSessionsResponse);
+
+  rpc ListUserSessions(ListUserSessionsRequest)
+  returns (ListUserSessionsResponse);
+}

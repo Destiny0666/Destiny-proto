@@ -1,0 +1,128 @@
+syntax = "proto3";
+
+package auth.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message User {
+  string                    id          = 1;
+  string                    email       = 2;
+  string                    username    = 3;
+  UserStatus                status      = 4;
+  bool                      is_verified = 5;
+  google.protobuf.Timestamp created_at  = 6;
+  google.protobuf.Timestamp updated_at  = 7;
+}
+
+enum UserStatus {
+  USER_STATUS_UNSPECIFIED          = 0;
+  USER_STATUS_PENDING_VERIFICATION = 1;
+  USER_STATUS_ACTIVE               = 2;
+  USER_STATUS_SUSPENDED            = 3;
+  USER_STATUS_DISABLED             = 4;
+}
+
+message AuthContext  {
+  string user_id    = 1;
+  string session_id = 2;
+  string email      = 3;
+  string username   = 4;
+}
+
+message TokenPair {
+  string access_token             = 1;
+  string refresh_token            = 2;
+  int64  access_token_expires_in  = 3;
+  int64  refresh_token_expires_in = 4;
+  string token_type               = 5;
+}
+
+message RegisterRequest {
+  string email    = 1;
+  string password = 2;
+  string username = 3;
+}
+
+message RegisterResponse {
+  User               user   = 1;
+  RegistrationStatus status = 2;
+}
+
+enum RegistrationStatus {
+  REGISTRATION_STATUS_UNSPECIFIED = 0;
+
+  REGISTRATION_STATUS_VERIFICATION_REQUIRED = 1;
+
+  REGISTRATION_STATUS_COMPLETED = 2;
+}
+
+message LoginRequest {
+  string email    = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  User      user   = 1;
+  TokenPair tokens = 2;
+}
+
+message LogoutRequest {
+  string session_id = 1;
+}
+
+message LogoutResponse {
+
+}
+
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+  TokenPair tokens = 1;
+}
+
+message ValidateAccessTokenRequest {
+  string access_token = 1;
+}
+
+message ValidateAccessTokenResponse {
+  bool        valid   = 1;
+  AuthContext context = 2;
+}
+
+message GetUserRequest {
+  string user_id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+message VerifyEmailRequest {
+  string token = 1;
+}
+
+message VerifyEmailResponse {
+  User user = 1;
+}
+
+service AuthService {
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+
+  rpc VerifyEmail(VerifyEmailRequest)
+  returns (VerifyEmailResponse);
+
+  rpc Login(LoginRequest) returns (LoginResponse);
+
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+
+  rpc RefreshToken(RefreshTokenRequest)
+  returns (RefreshTokenResponse);
+
+  rpc ValidateAccessToken(ValidateAccessTokenRequest)
+  returns (ValidateAccessTokenResponse);
+
+  rpc GetUser(GetUserRequest)
+  returns (GetUserResponse);
+}

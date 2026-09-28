@@ -1,0 +1,36 @@
+[config]
+default_to_workspace = false
+
+[tasks.fmt]
+command = "cargo"
+args = ["fmt", "--all"]
+
+[tasks.fmt-check]
+command = "cargo"
+args = ["fmt", "--all", "--", "--check"]
+
+[tasks.check]
+command = "cargo"
+args = ["check", "--all-targets", "--all-features"]
+
+[tasks.clippy]
+command = "cargo"
+args = ["clippy", "--all-targets", "--all-features", "--", "-D", "warnings"]
+
+[tasks.test]
+command = "cargo"
+args = ["test", "--all-features"]
+
+[tasks.build]
+command = "cargo"
+args = ["build", "--all-features"]
+
+[tasks.buf-lint]
+command = "buf"
+args = ["lint"]
+
+[tasks.ci]
+dependencies = ["fmt-check", "check", "clippy", "test"]
+
+[tasks.verify]
+dependencies = ["fmt-check", "buf-lint", "check", "clippy", "test", "build"]

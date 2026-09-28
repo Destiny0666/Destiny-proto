@@ -1,0 +1,137 @@
+syntax = "proto3";
+
+package events.auth.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message UserCreatedEvent {
+
+  string event_id = 1;
+
+  google.protobuf.Timestamp occurred_at = 2;
+
+  UserCreatedData data = 3;
+}
+
+message UserCreatedData {
+
+  string user_id = 1;
+
+  string email = 2;
+
+  string username = 3;
+
+  google.protobuf.Timestamp created_at = 4;
+}
+
+message UserEmailVerifiedEvent {
+
+  string event_id = 1;
+
+  google.protobuf.Timestamp occurred_at = 2;
+
+  UserEmailVerifiedData data = 3;
+}
+
+message UserEmailVerifiedData {
+
+  string user_id = 1;
+
+  string email = 2;
+
+  google.protobuf.Timestamp verified_at = 3;
+}
+
+message UserUpdatedEvent {
+
+  string event_id = 1;
+
+  google.protobuf.Timestamp occurred_at = 2;
+
+  UserUpdatedData data = 3;
+}
+
+message UserUpdatedData {
+
+  string user_id = 1;
+
+  string email = 2;
+
+  string username = 3;
+
+  bool is_verified = 4;
+
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message UserDeletedEvent {
+
+  string event_id = 1;
+
+  google.protobuf.Timestamp occurred_at = 2;
+
+  UserDeletedData data = 3;
+}
+
+message UserDeletedData {
+
+  string user_id = 1;
+}
+
+message SessionCreatedEvent {
+
+  string event_id = 1;
+
+  google.protobuf.Timestamp occurred_at = 2;
+
+  SessionCreatedData data = 3;
+}
+
+message SessionCreatedData {
+
+  string session_id = 1;
+
+  string user_id = 2;
+
+  google.protobuf.Timestamp created_at = 3;
+
+  google.protobuf.Timestamp expires_at = 4;
+}
+
+message SessionRevokedEvent {
+
+  string event_id = 1;
+
+  google.protobuf.Timestamp occurred_at = 2;
+
+  SessionRevokedData data = 3;
+}
+
+message SessionRevokedData {
+
+  string session_id = 1;
+
+  string user_id = 2;
+
+  google.protobuf.Timestamp revoked_at = 3;
+
+  string reason = 4;
+}
+
+message SessionExpiredEvent {
+
+  string event_id = 1;
+
+  google.protobuf.Timestamp occurred_at = 2;
+
+  SessionExpiredData data = 3;
+}
+
+message SessionExpiredData {
+
+  string session_id = 1;
+
+  string user_id = 2;
+
+  google.protobuf.Timestamp expired_at = 3;
+}
